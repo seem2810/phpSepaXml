@@ -40,7 +40,7 @@ class SEPADebitor extends SEPAParty {
 	public function XMLTransfer(\SimpleXMLElement $xml) {
 		$xml->addChild('Dbtr')->addChild('Nm', $this->fixNm($this->name));
 		$xml->addChild('DbtrAcct')->addChild('Id')->addChild('IBAN', str_replace(" ", "", $this->iban));
-		$xml->addChild('DbtrAgt')->addChild('FinInstnId')->addChild('BIC', $this->bic);
+		if (strlen($this->bic) > 4) $xml->addChild('DbtrAgt')->addChild('FinInstnId')->addChild('BIC', $this->bic);
 		$xml->addChild('ChrgBr', 'SLEV');
 	}
 	
@@ -65,7 +65,7 @@ class SEPADebitor extends SEPAParty {
 		
 		$MndtRltdInf->addChild('AmdmntInd', 'false');
 
-		$DrctDbtTxInf->addChild('DbtrAgt')->addChild('FinInstnId')->addChild('BIC', $this->bic);
+		if (strlen($this->bic) > 4) $DrctDbtTxInf->addChild('DbtrAgt')->addChild('FinInstnId')->addChild('BIC', $this->bic);
 		
 		$Dbtr = $DrctDbtTxInf->addChild('Dbtr');
 		$Dbtr->addChild('Nm', $this->fixNm($this->name));
