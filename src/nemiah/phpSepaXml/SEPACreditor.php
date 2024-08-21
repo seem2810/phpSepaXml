@@ -74,7 +74,7 @@ class SEPACreditor extends SEPAParty {
 		}
 		
 		$xml->addChild('CdtrAcct')->addChild('Id')->addChild('IBAN', str_replace(" ", "", $this->iban));
-		$xml->addChild('CdtrAgt')->addChild('FinInstnId')->addChild('BIC', $this->bic);
+		if (strlen($this->bic) > 4) $xml->addChild('CdtrAgt')->addChild('FinInstnId')->addChild('BIC', $this->bic);
 		$xml->addChild('ChrgBr', 'SLEV');
 		
 		$CdtrSchmeId = $xml->addChild('CdtrSchmeId');
@@ -100,7 +100,7 @@ class SEPACreditor extends SEPAParty {
 		$InstdAmt->addAttribute('Ccy', $this->currency);
 
 
-		$CdtTrfTxInf->addChild('CdtrAgt')->addChild('FinInstnId')->addChild('BIC', $this->bic);
+		if (strlen($this->bic) > 4) $CdtTrfTxInf->addChild('CdtrAgt')->addChild('FinInstnId')->addChild('BIC', $this->bic);
 		$CdtTrfTxInf->addChild('Cdtr')->addChild('Nm', $this->fixNm($this->name));
 		$CdtTrfTxInf->addChild('CdtrAcct')->addChild('Id')->addChild('IBAN', str_replace(" ", "", $this->iban));
 
