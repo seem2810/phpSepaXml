@@ -22,6 +22,9 @@ class SEPATransfer extends SEPAFile
     protected $creationDateTime;
     #protected $requestedCollectionDate;
     protected $type = "COR1";
+
+    protected $batchBooking = false;
+
     protected $paymentInitiation = 'pain.001.003.03';
 
     function __construct($data = null)
@@ -98,6 +101,7 @@ class SEPATransfer extends SEPAFile
                 $PmtInf->addChild('PmtInfId', $this->paymentID);
 
             $PmtInf->addChild('PmtMtd', 'TRF');
+            $PmtInf->addChild('BtchBookg', $this->batchBooking);
 
             $PmtInf->addChild('NbOfTxs', count($creditoren));
             $PmtInf->addChild('CtrlSum', $this->CtrlSum($sequence));
