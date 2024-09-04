@@ -73,7 +73,7 @@ class SEPATransfer extends SEPAFile
         foreach ($this->creditoren[$sequence] as $Creditor)
             $sum += $Creditor->amount;
 
-        return $sum;
+        return round($sum, 2);
     }
 
     public function toXML()
