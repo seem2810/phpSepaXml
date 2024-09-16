@@ -67,7 +67,7 @@ class SEPATransfer extends SEPAFile
                 foreach ($creditoren as $Creditor)
                     $sum += $Creditor->amount;
 
-            return $sum;
+            return round($sum, 2);
         }
 
         foreach ($this->creditoren[$sequence] as $Creditor)
@@ -90,8 +90,8 @@ class SEPATransfer extends SEPAFile
         $GrpHdr = $xml->addChild('CstmrCdtTrfInitn')->addChild('GrpHdr');
         $GrpHdr->addChild('MsgId', $this->messageID);
         $GrpHdr->addChild('CreDtTm', $this->creationDateTime->format('Y-m-d\TH:i:s'));
-        $GrpHdr->addChild('NbOfTxs', $count);
-        $GrpHdr->addChild('CtrlSum', $this->CtrlSum());
+        $GrpHdr->addChild('NbOfTxs', (int)$count);
+        $GrpHdr->addChild('CtrlSum', (float)$this->CtrlSum());
         $GrpHdr->addChild('InitgPty');
         $GrpHdr->InitgPty->addChild('Nm', htmlentities($this->initiator));
 
@@ -101,10 +101,10 @@ class SEPATransfer extends SEPAFile
                 $PmtInf->addChild('PmtInfId', $this->paymentID);
 
             $PmtInf->addChild('PmtMtd', 'TRF');
-            $PmtInf->addChild('BtchBookg', $this->batchBooking);
+            $PmtInf->addChild('BtchBookg', (bool)$this->batchBooking);
 
-            $PmtInf->addChild('NbOfTxs', count($creditoren));
-            $PmtInf->addChild('CtrlSum', $this->CtrlSum($sequence));
+            $PmtInf->addChild('NbOfTxs', (int)count($creditoren));
+            $PmtInf->addChild('CtrlSum', (float)$this->CtrlSum($sequence));
 
             $PmtTpInf = $PmtInf->addChild('PmtTpInf');
             $PmtTpInf->addChild('SvcLvl')->addChild('Cd', 'SEPA');
