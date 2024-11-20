@@ -101,7 +101,7 @@ class SEPATransfer extends SEPAFile
                 $PmtInf->addChild('PmtInfId', $this->paymentID);
 
             $PmtInf->addChild('PmtMtd', 'TRF');
-            if (count($creditoren) > 1) $PmtInf->addChild('BtchBookg', $this->batchBooking);
+            if (count($creditoren) > 1) $PmtInf->addChild('BtchBookg', $this->batchBooking ? 'TRUE' : 'FALSE');
 
             $PmtInf->addChild('NbOfTxs', count($creditoren));
             $PmtInf->addChild('CtrlSum', $this->CtrlSum($sequence));
