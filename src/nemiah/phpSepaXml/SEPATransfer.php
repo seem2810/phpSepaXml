@@ -95,6 +95,25 @@ class SEPATransfer extends SEPAFile
         $GrpHdr->addChild('InitgPty');
         $GrpHdr->InitgPty->addChild('Nm', htmlentities($this->initiator));
 
+        // Check if sequences are in the future
+        if (array_key_exists('1999-01-01', $this->creditoren)) {
+            $hasFutureDate = count(array_filter(array_keys($this->creditoren), fn($key) => $key !== '1999-01-01')) > 0;
+
+            if ($hasFutureDate) {
+                $tomorrow = (new \DateTime())->add(new \DateInterval('P1D'))->format('Y-m-d');
+
+                // Handle case where $tomorrow already exists
+                if (array_key_exists($tomorrow, $this->creditoren)) {
+                    $this->creditoren[$tomorrow] = array_merge(
+                        (array) $this->creditoren[$tomorrow],
+                        (array) $this->creditoren['1999-01-01']
+                    );
+                } else $this->creditoren[$tomorrow] = $this->creditoren['1999-01-01'];
+
+                unset($this->creditoren['1999-01-01']);
+            }
+        }
+
         foreach ($this->creditoren as $sequence => $creditoren) {
             $PmtInf = $xml->CstmrCdtTrfInitn->addChild('PmtInf');
             if ($this->paymentID != '')
