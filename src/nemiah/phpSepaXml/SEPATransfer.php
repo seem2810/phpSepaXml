@@ -105,8 +105,8 @@ class SEPATransfer extends SEPAFile
                 // Handle case where $tomorrow already exists
                 if (array_key_exists($tomorrow, $this->creditoren)) {
                     $this->creditoren[$tomorrow] = array_merge(
-                        (array) $this->creditoren[$tomorrow],
-                        (array) $this->creditoren['1999-01-01']
+                        (array)$this->creditoren[$tomorrow],
+                        (array)$this->creditoren['1999-01-01']
                     );
                 } else $this->creditoren[$tomorrow] = $this->creditoren['1999-01-01'];
 
@@ -117,7 +117,7 @@ class SEPATransfer extends SEPAFile
         foreach ($this->creditoren as $sequence => $creditoren) {
             $PmtInf = $xml->CstmrCdtTrfInitn->addChild('PmtInf');
             if ($this->paymentID != '')
-                $PmtInf->addChild('PmtInfId', $this->paymentID);
+                $PmtInf->addChild('PmtInfId', $this->paymentID . '-' . (array_search($sequence, array_keys($this->creditoren))));
 
             $PmtInf->addChild('PmtMtd', 'TRF');
             if (count($creditoren) > 1) $PmtInf->addChild('BtchBookg', $this->batchBooking ? 'true' : 'false');
